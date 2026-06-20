@@ -1,0 +1,76 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "Protos/Common.proto";
+
+option csharp_namespace = "SuperGiros.Transfer.Services.gRPC.Protos";
+
+// ✅ LÍNEA CLAVE AGREGADA:
+package Protos;
+
+service Transactions {
+    rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionResponse);
+    rpc UpdateTransaction (UpdateTransactionRequest) returns (UpdateTransactionResponse);
+    rpc CancelTransaction (CancelTransactionRequest) returns (CancelTransactionResponse);
+    rpc GetTransaction    (GetTransactionRequest)    returns (GetTransactionResponse);
+    rpc GetAllTransaction (GetAllTransactionRequest) returns (GetAllTransactionResponse);
+}
+
+enum TransactionType {
+    Transferencia = 0;
+    Giro          = 1;
+}
+
+// Estado global: Inactivo=0, Activo=1, Completado=2
+enum TransactionState {
+    TRANSACTION_INACTIVO   = 0;
+    TRANSACTION_ACTIVO     = 1;
+    TRANSACTION_COMPLETADO = 2;
+}
+
+message CreateTransactionRequest {
+    int32                     AccountId        = 1;
+    TransactionType           TipoMovimiento   = 2;
+    double                    Monto            = 3;
+    string                    Moneda           = 4;
+    string                    Descripcion      = 5;
+    string                    Sede             = 6;
+    google.protobuf.Timestamp FechaRealizacion = 7;
+}
+
+message CreateTransactionResponse { ServerResponse ServerResponse = 1; }
+
+message UpdateTransactionRequest {
+    int32                     Id               = 1;
+    int32                     AccountId        = 2;
+    TransactionType           TipoMovimiento   = 3;
+    double                    Monto            = 4;
+    string                    Moneda           = 5;
+    string                    Descripcion      = 6;
+    string                    Sede             = 7;
+    google.protobuf.Timestamp FechaRealizacion = 8;
+    TransactionState          State            = 9;
+}
+
+message UpdateTransactionResponse { ServerResponse ServerResponse = 1; TransactionResponse Data = 2; }
+
+message CancelTransactionRequest  { int32 Id = 1; }
+message CancelTransactionResponse { ServerResponse ServerResponse = 1; }
+
+message GetTransactionRequest     { int32 Id = 1; }
+message GetTransactionResponse    { ServerResponse ServerResponse = 1; TransactionResponse Data = 2; }
+
+message GetAllTransactionRequest  {}
+message GetAllTransactionResponse { ServerResponse ServerResponse = 1; repeated TransactionResponse Data = 2; }
+
+// ✅ Incluye State
+message TransactionResponse {
+    int32                     Id               = 1;
+    int32                     AccountId        = 2;
+    TransactionType           TipoMovimiento   = 3;
+    double                    Monto            = 4;
+    string                    Moneda           = 5;
+    string                    Descripcion      = 6;
+    string                    Sede             = 7;
+    google.protobuf.Timestamp FechaRealizacion = 8;
+    TransactionState          State            = 9;
+}

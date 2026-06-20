@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Application/">
+    <Project Path="src/SuperGiros.Transfer.Application.Interfaces/SuperGiros.Transfer.Application.Interfaces.csproj" Id="885970e8-5bea-470c-9da3-c646035cb78e" />
+    <Project Path="src/SuperGiros.Transfer.Application.UseCases/SuperGiros.Transfer.Application.UseCases.csproj" Id="b32de793-45b3-4f4f-aeb7-1d83cfdc491b" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="src/SuperGiros.Transfer.Domain/SuperGiros.Transfer.Domain.csproj" Id="244b4396-9e2d-451b-855e-16174e2d6768" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="src/SuperGiros.Transfer.Infrastructure/SuperGiros.Transfer.Infrastructure.csproj" Id="c65b384f-adc3-4b31-b954-0e4a88f6e30b" />
+    <Project Path="src/SuperGiros.Transfer.Messaging/SuperGiros.Transfer.Messaging.csproj" Id="a1b2c3d4-e5f6-7890-abcd-ef1234567890" />
+    <Project Path="src/SuperGiros.Transfer.Persistence/SuperGiros.Transfer.Persistence.csproj" Id="105ff8b8-7f92-4d2d-8e7f-eeb53ff3a26f" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="src/SuperGiros.Transfer.Services.gRPC/SuperGiros.Transfer.Services.gRPC.csproj" Id="d283048e-c94f-4ab1-9d43-67882dec9220" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/SuperGiros.Transfer.Tests/SuperGiros.Transfer.Tests.csproj" Id="f9e8d7c6-b5a4-3210-fedc-ba9876543210" />
+  </Folder>
+</Solution>

@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "Protos/Common.proto";
+
+option csharp_namespace = "SuperGiros.Transfer.Services.gRPC.Protos";
+
+package Protos;
+
+service Customers {
+    rpc CreateCustomer (CreateCustomerRequest) returns (CreateCustomerResponse);
+    rpc UpdateCustomer (UpdateCustomerRequest) returns (UpdateCustomerResponse);
+    rpc CancelCustomer (CancelCustomerRequest) returns (CancelCustomerResponse);
+    rpc GetCustomer    (GetCustomerRequest)    returns (GetCustomerResponse);
+    rpc GetAllCustomer (GetAllCustomerRequest) returns (GetAllCustomerResponse);
+    
+    // 🚀 NUEVA RUTA DE VENTANILLA: Busca explícitamente usando el parámetro NroDocumento (DNI)
+    rpc GetCustomerByDni (GetCustomerByDniRequest) returns (GetCustomerResponse);
+}
+
+enum CustomerDocumentType {
+    DNI = 0;
+    CE  = 1;
+}
+
+enum CustomerState {
+    CUSTOMER_INACTIVO   = 0;
+    CUSTOMER_ACTIVO     = 1;
+    CUSTOMER_COMPLETADO = 2;
+}
+
+// 🔍 NUEVO MENSAJE DE ENTRADA EXCLUSIVO PARA EL DNI
+message GetCustomerByDniRequest {
+    int32 NroDocumento = 1; 
+}
+
+message CreateCustomerRequest {
+    string               Nombre          = 1;
+    string               ApellidoPaterno = 2;
+    string               ApellidoMaterno = 3;
+    string               Celular         = 4;
+    string               email           = 5;
+    CustomerDocumentType TipoDocumento   = 6;
+    int32                NroDocumento    = 7;
+}
+
+message CreateCustomerResponse {
+    ServerResponse ServerResponse = 1;
+}
+
+message UpdateCustomerRequest {
+    int32                Id              = 1;
+    string               Nombre          = 2;
+    string               ApellidoPaterno = 3;
+    string               ApellidoMaterno = 4;
+    string               Celular         = 5;
+    string               email           = 6;
+    CustomerDocumentType TipoDocumento   = 7;
+    int32                NroDocumento    = 8;
+}
+
+message UpdateCustomerResponse {
+    ServerResponse   ServerResponse = 1;
+    CustomerResponse Data           = 2;
+}
+
+message CancelCustomerRequest  { int32 Id = 1; }
+message CancelCustomerResponse { ServerResponse ServerResponse = 1; }
+
+message GetCustomerRequest     { int32 Id = 1; }
+message GetCustomerResponse    { 
+    ServerResponse ServerResponse = 1; 
+    CustomerResponse Data = 2; 
+}
+
+message GetAllCustomerRequest  {}
+message GetAllCustomerResponse { 
+    ServerResponse ServerResponse = 1; 
+    repeated CustomerResponse Data = 2; 
+}
+
+message CustomerResponse {
+    int32                Id              = 1;
+    string               Nombre          = 2;
+    string               ApellidoPaterno = 3;
+    string               ApellidoMaterno = 4;
+    string               Celular         = 5;
+    string               email           = 6;
+    CustomerDocumentType TipoDocumento   = 7;
+    int32                NroDocumento    = 8; // 💳 Este campo representará tu DNI/CE en el Frontend
+    CustomerState        State           = 9;
+}

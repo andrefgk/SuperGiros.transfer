@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  # ---- Base de datos SQL Server ----
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: supergiros-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SuperGiros@2026!"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'SuperGiros@2026!' -Q 'SELECT 1' -C || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - supergiros-net
+
+  # ---- API SuperGiros (gRPC + REST + Swagger) ----
+  api:
+    build:
+      context: .
+      dockerfile: src/SuperGiros.Transfer.Services.gRPC/Dockerfile
+    container_name: supergiros-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__TransferConnection: "Server=sqlserver,1433;Database=transfer_docker;User ID=sa;Password=SuperGiros@2026!;TrustServerCertificate=true;"
+      JwtSettings__SecretKey: "S3gurid4d.Tr4nsf3r.Sup3rG1r0s.K3y.2026!*"
+      JwtSettings__Issuer: "SuperGiros.Transfer.API"
+      JwtSettings__Audience: "SuperGiros.Transfer.Users"
+      JwtSettings__ExpirationHours: "1"
+    ports:
+      - "5220:5220"
+      - "5221:5221"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - supergiros-net
+    restart: on-failure
+
+volumes:
+  sqlserver_data:
+
+networks:
+  supergiros-net:
+    driver: bridge

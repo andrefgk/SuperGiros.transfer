@@ -1,0 +1,61 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "Protos/Common.proto";
+
+option csharp_namespace = "SuperGiros.Transfer.Services.gRPC.Protos";
+
+service Offices {
+    rpc CreateOffice (CreateOfficeRequest) returns (CreateOfficeResponse);
+    rpc UpdateOffice (UpdateOfficeRequest) returns (UpdateOfficeResponse);
+    rpc CancelOffice (CancelOfficeRequest) returns (CancelOfficeResponse);
+    rpc GetOffice    (GetOfficeRequest)    returns (GetOfficeResponse);
+    rpc GetAllOffice (GetAllOfficeRequest) returns (GetAllOfficeResponse);
+}
+
+enum OfficeStatus {
+    Inactiva   = 0;
+    Activa     = 1;
+    Completada = 2;
+}
+
+message CreateOfficeRequest {
+    string       Nombre         = 1;
+    string       Ubicacion      = 2;
+    double       MontoDiario    = 3;
+    int32        NumeroClientes = 4;
+    double       Saldo          = 5;
+    OfficeStatus Estado         = 6;
+}
+
+message CreateOfficeResponse { ServerResponse ServerResponse = 1; OfficeResponse Data = 2; }
+
+message UpdateOfficeRequest {
+    int32        Id             = 1;
+    string       Nombre         = 2;
+    string       Ubicacion      = 3;
+    double       MontoDiario    = 4;
+    int32        NumeroClientes = 5;
+    double       Saldo          = 6;
+    OfficeStatus Estado         = 7;
+}
+
+message UpdateOfficeResponse { ServerResponse ServerResponse = 1; OfficeResponse Data = 2; }
+
+message CancelOfficeRequest  { int32 Id = 1; }
+message CancelOfficeResponse { ServerResponse ServerResponse = 1; }
+
+message GetOfficeRequest     { int32 Id = 1; }
+message GetOfficeResponse    { ServerResponse ServerResponse = 1; OfficeResponse Data = 2; }
+
+message GetAllOfficeRequest  {}
+message GetAllOfficeResponse { ServerResponse ServerResponse = 1; repeated OfficeResponse Data = 2; }
+
+message OfficeResponse {
+    int32        Id             = 1;
+    string       Nombre         = 2;
+    string       Ubicacion      = 3;
+    double       MontoDiario    = 4;
+    int32        NumeroClientes = 5;
+    double       Saldo          = 6;
+    OfficeStatus Estado         = 7;
+}

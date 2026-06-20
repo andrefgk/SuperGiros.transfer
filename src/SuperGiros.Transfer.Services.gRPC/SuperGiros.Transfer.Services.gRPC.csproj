@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Protos\Common.proto" />
+    <None Remove="Protos\Customer.proto" />
+    <None Remove="Protos\Office.proto" />
+    <None Remove="Protos\Transaction.proto" />
+    <None Remove="Protos\user.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="Protos\Common.proto" />
+    <Protobuf Include="Protos\Customer.proto" />
+    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\Office.proto" />
+    <Protobuf Include="Protos\Transaction.proto" />
+    <Protobuf Include="Protos\user.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.76.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.80.0" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SuperGiros.Transfer.Application.Interfaces\SuperGiros.Transfer.Application.Interfaces.csproj" />
+    <ProjectReference Include="..\SuperGiros.Transfer.Application.UseCases\SuperGiros.Transfer.Application.UseCases.csproj" />
+    <ProjectReference Include="..\SuperGiros.Transfer.Messaging\SuperGiros.Transfer.Messaging.csproj" />
+    <ProjectReference Include="..\SuperGiros.Transfer.Persistence\SuperGiros.Transfer.Persistence.csproj" />
+  </ItemGroup>
+</Project>

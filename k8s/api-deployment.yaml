@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supergiros-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supergiros-api
+  template:
+    metadata:
+      labels:
+        app: supergiros-api
+    spec:
+      containers:
+      - name: supergiros-api
+        image: supergirostransfer-api:latest
+        imagePullPolicy: IfNotPresent   
+        ports:
+        - containerPort: 5220   # HTTP1 / Swagger
+        - containerPort: 5221   # HTTP2 / gRPC
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: supergiros-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: JwtSettings__Issuer
+          valueFrom:
+            configMapKeyRef:
+              name: supergiros-config
+              key: JwtSettings__Issuer
+        - name: JwtSettings__Audience
+          valueFrom:
+            configMapKeyRef:
+              name: supergiros-config
+              key: JwtSettings__Audience
+        - name: JwtSettings__ExpirationHours
+          valueFrom:
+            configMapKeyRef:
+              name: supergiros-config
+              key: JwtSettings__ExpirationHours
+        - name: ConnectionStrings__TransferConnection
+          valueFrom:
+            secretKeyRef:
+              name: supergiros-secrets
+              key: db-connection
+        - name: JwtSettings__SecretKey
+          valueFrom:
+            secretKeyRef:
+              name: supergiros-secrets
+              key: jwt-secret
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5220
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: supergiros-api-svc
+  namespace: default
+spec:
+  selector:
+    app: supergiros-api
+  ports:
+  - name: http
+    port: 5220
+    targetPort: 5220
+    nodePort: 30220
+  - name: grpc
+    port: 5221
+    targetPort: 5221
+    nodePort: 30221
+  type: NodePort

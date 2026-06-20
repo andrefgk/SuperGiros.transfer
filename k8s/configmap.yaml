@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supergiros-config
+  namespace: default
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  JwtSettings__Issuer: "SuperGiros.Transfer.API"
+  JwtSettings__Audience: "SuperGiros.Transfer.Users"
+  JwtSettings__ExpirationHours: "1"
+  MSSQL_PID: "Express"

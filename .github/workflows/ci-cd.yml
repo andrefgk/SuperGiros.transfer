@@ -1,0 +1,65 @@
+name: CI/CD SuperGiros Transfer
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  # ---- JOB 1: Build + Unit Tests ----
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restaurar dependencias
+      run: dotnet restore src/SuperGiros.Transfer.Services.gRPC/SuperGiros.Transfer.Services.gRPC.csproj
+
+    - name: Build
+      run: dotnet build src/SuperGiros.Transfer.Services.gRPC/SuperGiros.Transfer.Services.gRPC.csproj --no-restore -c Release
+
+    - name: Ejecutar pruebas unitarias (xUnit + Moq)
+      run: dotnet test tests/SuperGiros.Transfer.Tests/SuperGiros.Transfer.Tests.csproj --no-build -c Release --logger "trx;LogFileName=test-results.trx"
+
+    - name: Publicar resultados de pruebas
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: '**/test-results.trx'
+
+  # ---- JOB 2: Docker Build & Push ----
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+
+    - name: Build imagen Docker
+      run: |
+        docker build -t supergiros-api:${{ github.sha }} \
+          -f src/SuperGiros.Transfer.Services.gRPC/Dockerfile .
+
+    - name: Tag como latest
+      run: docker tag supergiros-api:${{ github.sha }} supergiros-api:latest
+
+    # Para publicar en Docker Hub descomentar:
+    # - name: Login Docker Hub
+    #   uses: docker/login-action@v3
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    # - name: Push imagen
+    #   run: docker push supergiros-api:latest
