@@ -33,7 +33,7 @@ namespace SuperGiros.Transfer.Tests.Handlers
             var fakeDbSet     = CrearDbSetFake(data);
 
             mockContext.Setup(c => c.transactions).Returns(fakeDbSet);
-            mockContext.Setup(c => c.SaveChangeAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
             mockPublisher
                 .Setup(p => p.PublishTransactionCreatedAsync(It.IsAny<TransactionCreatedMessage>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
@@ -72,7 +72,7 @@ namespace SuperGiros.Transfer.Tests.Handlers
             var fakeDbSet     = CrearDbSetFake(new List<Transaction>());
 
             mockContext.Setup(c => c.transactions).Returns(fakeDbSet);
-            mockContext.Setup(c => c.SaveChangeAsync(It.IsAny<CancellationToken>())).ReturnsAsync(0);
+            mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
             var command = new CreateTransactionCommand
             {
@@ -104,7 +104,7 @@ namespace SuperGiros.Transfer.Tests.Handlers
             var fakeDbSet     = CrearDbSetFake(new List<Transaction>());
 
             mockContext.Setup(c => c.transactions).Returns(fakeDbSet);
-            mockContext.Setup(c => c.SaveChangeAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
             mockPublisher.Setup(p => p.PublishTransactionCreatedAsync(It.IsAny<TransactionCreatedMessage>(), It.IsAny<CancellationToken>()))
                          .Returns(Task.CompletedTask);
 
@@ -121,7 +121,7 @@ namespace SuperGiros.Transfer.Tests.Handlers
             await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            mockContext.Verify(c => c.SaveChangeAsync(It.IsAny<CancellationToken>()), Times.Once);
+            mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         // Helper: DbSet fake en memoria

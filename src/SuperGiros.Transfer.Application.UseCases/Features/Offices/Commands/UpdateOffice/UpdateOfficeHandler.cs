@@ -34,7 +34,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Offices.Commands.Upd
                 _applicationDBContext.offices.Update(office);
 
             }
-            if (await _applicationDBContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDBContext.SaveChangesAsync(cancellationToken) > 0)
                 return true;
             else
                 return false;

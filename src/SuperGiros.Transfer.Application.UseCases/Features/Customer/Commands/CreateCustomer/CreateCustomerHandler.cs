@@ -24,7 +24,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Customer.Commands.Cr
             var customer = _mapper.Map<SuperGiros.Transfer.Domain.Entities.Customer>(request);
             await _applicationDBContext.customers.AddAsync(customer, cancellationToken);
 
-            if (await _applicationDBContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDBContext.SaveChangesAsync(cancellationToken) > 0)
             {
                 await _eventPublisher.PublishCustomerCreatedAsync(new CustomerCreatedMessage
                 {

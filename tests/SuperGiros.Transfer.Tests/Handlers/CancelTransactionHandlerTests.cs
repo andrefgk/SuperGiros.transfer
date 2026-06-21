@@ -35,7 +35,7 @@ namespace SuperGiros.Transfer.Tests.Handlers
 
             var mockSet = BuildAsyncDbSet(data);
             mockContext.Setup(c => c.transactions).Returns(mockSet);
-            mockContext.Setup(c => c.SaveChangeAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
             mockPublisher
                 .Setup(p => p.PublishTransactionCanceledAsync(It.IsAny<TransactionCanceledMessage>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);

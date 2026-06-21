@@ -26,7 +26,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Customer.Commands.Ca
             customer.State = State.Inactivo;
             _applicationDbContext.customers.Update(customer);
 
-            return await _applicationDbContext.SaveChangeAsync(cancellationToken) > 0;
+            return await _applicationDbContext.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

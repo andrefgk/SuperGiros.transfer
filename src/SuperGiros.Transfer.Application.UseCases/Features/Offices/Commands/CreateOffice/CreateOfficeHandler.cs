@@ -19,7 +19,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Offices.Commands.Cre
         {
             var office = _mapper.Map<SuperGiros.Transfer.Domain.Entities.Offices>(request);
             await _applicationDbContext.offices.AddAsync(office, cancellationToken);
-            if (await _applicationDbContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDbContext.SaveChangesAsync(cancellationToken) > 0)
                 return office.Id;
             return 0;
         }

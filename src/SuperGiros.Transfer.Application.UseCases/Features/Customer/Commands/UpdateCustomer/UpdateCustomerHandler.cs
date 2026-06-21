@@ -32,7 +32,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Customer.Commands.Up
 
             _applicationDbContext.customers.Update(customer);
 
-            if (await _applicationDbContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDbContext.SaveChangesAsync(cancellationToken) > 0)
                 return true;
             else
                 return false;

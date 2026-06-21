@@ -1,8 +1,22 @@
+# 1. Definimos el almacenamiento permanente (PVC)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-pvc
+  namespace: supergiros
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+# 2. Definimos el Deployment conectado a ese almacenamiento
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sqlserver
-  namespace: default
+  namespace: supergiros
 spec:
   replicas: 1
   selector:
@@ -31,29 +45,24 @@ spec:
             secretKeyRef:
               name: supergiros-secrets
               key: sa-password
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
         volumeMounts:
         - name: sqlserver-storage
-          mountPath: /var/opt/mssql
+          mountPath: /var/opt/mssql # Lugar donde SQL guarda los datos
       volumes:
       - name: sqlserver-storage
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: mssql-pvc # <-- AQUÍ CONECTAMOS LA PERSISTENCIA
 ---
+# 3. Definimos el Servicio para que la API encuentre a la BD
 apiVersion: v1
 kind: Service
 metadata:
   name: sqlserver
-  namespace: default
+  namespace: supergiros
 spec:
   selector:
     app: sqlserver
   ports:
   - port: 1433
     targetPort: 1433
-  type: ClusterIP
+  type: ClusterIP # Interno: Solo tu API dentro del clúster puede verla

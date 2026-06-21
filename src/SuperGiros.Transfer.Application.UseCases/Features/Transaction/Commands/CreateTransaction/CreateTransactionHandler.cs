@@ -24,7 +24,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Transaction.Commands
             var transaction = _mapper.Map<SuperGiros.Transfer.Domain.Entities.Transaction>(request);
             await _applicationDBContext.transactions.AddAsync(transaction, cancellationToken);
 
-            if (await _applicationDBContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDBContext.SaveChangesAsync(cancellationToken) > 0)
             {
                 // Publicar evento event-driven
                 await _eventPublisher.PublishTransactionCreatedAsync(new TransactionCreatedMessage

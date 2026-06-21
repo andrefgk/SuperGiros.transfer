@@ -17,6 +17,6 @@ namespace SuperGiros.Transfer.Application.Interfaces.Persistence
         DbSet<Offices> offices { get; set; }
 
         DbSet<User> users { get; set; }
-        Task<int> SaveChangeAsync(CancellationToken cancellationToken);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -24,7 +24,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Users.Commands.Creat
             var user = _mapper.Map<User>(request);
             // El interceptor se encargará del PasswordHash y el State.Active
             _context.users.Add(user);
-            await _context.SaveChangeAsync(ct);
+            await _context.SaveChangesAsync(ct);
             return user.Id;
         }
     }

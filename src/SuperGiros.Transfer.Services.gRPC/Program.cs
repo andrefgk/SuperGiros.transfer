@@ -16,8 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. KESTREL: HTTP1 para Swagger/REST + HTTP2 para gRPC
 builder.WebHost.ConfigureKestrel(options => {
-    options.ListenAnyIP(5240, o => o.Protocols = HttpProtocols.Http1AndHttp2);
-    options.ListenAnyIP(5241, o => o.Protocols = HttpProtocols.Http2);
+    options.ListenAnyIP(5220, o => o.Protocols = HttpProtocols.Http1AndHttp2); // Antes 5240
+    options.ListenAnyIP(5221, o => o.Protocols = HttpProtocols.Http2); // Antes 5241
 });
 
 // =========================================================
@@ -27,7 +27,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // El puerto de Vite/React
+        // Para entorno de Minikube permite cualquier origen, o pon explícitamente la IP de Minikube
+        policy.SetIsOriginAllowed(origin => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
@@ -71,7 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         error = "No autorizado",
                         mensaje,
                         status = 401,
-                        hint = "Envía el header: Authorization: Bearer <tu_token>"
+                        hint = "Envía el header: Authorization: Bearer <tu_token>   "
                     }));
             },
             OnForbidden = async context =>
@@ -139,11 +140,11 @@ builder.Services.AddSwaggerGen(c => {
 var app = builder.Build();
 
 // Pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SuperGiros v1"));
-}
+// if (app.Environment.IsDevelopment())
+// {
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SuperGiros v1"));
+// }
 
 // =========================================================
 // 🔴 NUEVO: APLICAR CORS Y GRPC-WEB (ANTES DE AUTHENTICATION)
@@ -172,7 +173,7 @@ app.MapGet("/", () => "✅ SuperGiros Transfer Service activo");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    db.Database.Migrate(); // Esto crea las tablas automáticamente
 }
 
 app.Run();

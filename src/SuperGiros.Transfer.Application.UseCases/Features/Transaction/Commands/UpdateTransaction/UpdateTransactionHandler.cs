@@ -32,7 +32,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Transaction.Commands
 
             _applicationDbContext.transactions.Update(transaction);
 
-            if (await _applicationDbContext.SaveChangeAsync(cancellationToken) > 0)
+            if (await _applicationDbContext.SaveChangesAsync(cancellationToken) > 0)
                 return true;
             else
                 return false;

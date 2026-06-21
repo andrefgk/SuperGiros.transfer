@@ -28,7 +28,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Offices.Commands.Can
             // Marcar explícitamente como modificado para que EF lo persista
             _applicationDbContext.offices.Update(office);
 
-            return await _applicationDbContext.SaveChangeAsync(cancellationToken) > 0;
+            return await _applicationDbContext.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

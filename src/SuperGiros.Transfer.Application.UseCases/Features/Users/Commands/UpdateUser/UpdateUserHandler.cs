@@ -34,7 +34,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Users.Commands.Updat
             _context.users.Update(user);
 
             // Retorna true si hubo cambios guardados con éxito
-            return await _context.SaveChangeAsync(cancellationToken) > 0;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

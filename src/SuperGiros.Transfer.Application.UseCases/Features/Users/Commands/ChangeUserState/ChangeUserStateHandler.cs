@@ -31,7 +31,7 @@ namespace SuperGiros.Transfer.Application.UseCases.Features.Users.Commands.Chang
             _context.users.Update(user);
 
             // Guardamos cambios (esto activará tu Interceptor de Auditoría)
-            return await _context.SaveChangeAsync(cancellationToken) > 0;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }
